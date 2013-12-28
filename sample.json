@@ -1,0 +1,64 @@
+{
+  "nodeList": [
+    {
+      "nodeID": 1,
+      "nodeName": "海洋",
+      "nodeFather": 0,
+      "nodeSet": "1",
+      "nodeSize": 4,
+      "nodeComment": ""
+    },
+    {
+      "nodeID": 2,
+      "nodeName": "水",
+      "nodeFather": 1,
+      "nodeComment": "海洋組成元素之一"
+    },
+    {
+      "nodeID": 3,
+      "nodeName": "招潮蟹",
+      "nodeFather": 1,
+      "nodeComment": "海洋生物"
+    },
+    {
+      "nodeID": 4,
+      "nodeName": "食藻螺",
+      "nodeFather": 1,
+      "nodeComment": "海洋生物"
+    },
+    {
+      "nodeID": 5,
+      "nodeName": "海岸",
+      "nodeFather": 0,
+      "nodeSet": 2,
+      "nodeSize": 3,
+      "nodeComment": ""
+    },
+    {
+      "nodeID": 6,
+      "nodeName": "岩岸",
+      "nodeFather": 5,
+      "nodeComment": "海洋沿岸地形"
+    },
+    {
+      "nodeID": 7,
+      "nodeName": "沙岸",
+      "nodeFather": 5,
+      "nodeComment": "海洋沿岸地形"
+    }
+  ],
+  "relationList": [
+    {
+      "relationID": 1,
+      "nodeID_A": 3,
+      "nodeID_B": 7,
+      "relationComment": "沙岸生物"
+    },
+    {
+      "relationID": 2,
+      "nodeID_A": 4,
+      "nodeID_B": 6,
+      "relationComment": "岩岸生物"
+    }
+  ]
+}
