@@ -8,26 +8,7 @@ var links = [
   {source: "海岸", target: "岩岸", type: "contain", id: 6},
   {source: "海岸", target: "沙岸", type: "contain", id: 7},
   {source: "招潮蟹", target: "沙岸", type: "relation", id: 8},
-  {source: "食藻螺", target: "岩岸", type: "relation", id: 9},
-  {source: "Oracle", target: "Google", type: "relation"},
-  {source: "Apple", target: "HTC", type: "relation"},
-  {source: "Microsoft", target: "Inventec", type: "relation"},
-  {source: "Samsung", target: "Kodak", type: "resolved"},
-  {source: "LG", target: "Kodak", type: "resolved"},
-  {source: "RIM", target: "Kodak", type: "relation"},
-  {source: "Sony", target: "LG", type: "relation"},
-  {source: "Kodak", target: "LG", type: "resolved"},
-  {source: "Apple", target: "Nokia", type: "resolved"},
-  {source: "Qualcomm", target: "Nokia", type: "resolved"},
-  {source: "Apple", target: "Motorola", type: "relation"},
-  {source: "Microsoft", target: "Motorola", type: "relation"},
-  {source: "Motorola", target: "Microsoft", type: "relation"},
-  {source: "Huawei", target: "ZTE", type: "relation"},
-  {source: "Ericsson", target: "ZTE", type: "relation"},
-  {source: "Kodak", target: "Samsung", type: "resolved"},
-  {source: "Apple", target: "Samsung", type: "relation"},
-  {source: "Kodak", target: "RIM", type: "relation"},
-  {source: "Nokia", target: "Qualcomm", type: "relation"}
+  {source: "食藻螺", target: "岩岸", type: "relation", id: 9}
 ];
 
 var routes = [
