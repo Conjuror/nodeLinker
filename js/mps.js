@@ -155,6 +155,7 @@ function getRoutes(a, b) {
 // set a click event, add an event listener to every circle, when they are selected, change the color to yellow
 // You can not use addClass for svg
 $("circle").on("click", function() {
+  if ($(this).attr("id") == "Root") return;
   if ($(this).attr("class").indexOf("selected") != -1 && selectedNode.length == 2) {
     $(".route").each(function() {
       $(this).attr("class", $(this).attr("class").replace(" route", ""));
