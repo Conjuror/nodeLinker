@@ -1,34 +1,33 @@
 
-// http://blog.thomsonreuters.com/index.php/mobile-patent-suits-graphic-of-the-day/
 var links = [
-  {source: "Root", target: "海洋", type: "licensing"},
-  {source: "Root", target: "海岸", type: "licensing"},
-  {source: "海洋", target: "水", type: "licensing"},
-  {source: "海洋", target: "招潮蟹", type: "licensing"},
-  {source: "海洋", target: "食藻螺", type: "licensing"},
-  {source: "海岸", target: "岩岸", type: "licensing"},
-  {source: "海岸", target: "沙岸", type: "licensing"},
-  {source: "招潮蟹", target: "沙岸", type: "suit"},
-  {source: "食藻螺", target: "岩岸", type: "suit"},
-  {source: "Oracle", target: "Google", type: "suit"},
-  {source: "Apple", target: "HTC", type: "suit"},
-  {source: "Microsoft", target: "Inventec", type: "suit"},
+  {source: "Root", target: "海洋", type: "contain"},
+  {source: "Root", target: "海岸", type: "contain"},
+  {source: "海洋", target: "水", type: "contain"},
+  {source: "海洋", target: "招潮蟹", type: "contain"},
+  {source: "海洋", target: "食藻螺", type: "contain"},
+  {source: "海岸", target: "岩岸", type: "contain"},
+  {source: "海岸", target: "沙岸", type: "contain"},
+  {source: "招潮蟹", target: "沙岸", type: "relation"},
+  {source: "食藻螺", target: "岩岸", type: "relation"},
+  {source: "Oracle", target: "Google", type: "relation"},
+  {source: "Apple", target: "HTC", type: "relation"},
+  {source: "Microsoft", target: "Inventec", type: "relation"},
   {source: "Samsung", target: "Kodak", type: "resolved"},
   {source: "LG", target: "Kodak", type: "resolved"},
-  {source: "RIM", target: "Kodak", type: "suit"},
-  {source: "Sony", target: "LG", type: "suit"},
+  {source: "RIM", target: "Kodak", type: "relation"},
+  {source: "Sony", target: "LG", type: "relation"},
   {source: "Kodak", target: "LG", type: "resolved"},
   {source: "Apple", target: "Nokia", type: "resolved"},
   {source: "Qualcomm", target: "Nokia", type: "resolved"},
-  {source: "Apple", target: "Motorola", type: "suit"},
-  {source: "Microsoft", target: "Motorola", type: "suit"},
-  {source: "Motorola", target: "Microsoft", type: "suit"},
-  {source: "Huawei", target: "ZTE", type: "suit"},
-  {source: "Ericsson", target: "ZTE", type: "suit"},
+  {source: "Apple", target: "Motorola", type: "relation"},
+  {source: "Microsoft", target: "Motorola", type: "relation"},
+  {source: "Motorola", target: "Microsoft", type: "relation"},
+  {source: "Huawei", target: "ZTE", type: "relation"},
+  {source: "Ericsson", target: "ZTE", type: "relation"},
   {source: "Kodak", target: "Samsung", type: "resolved"},
-  {source: "Apple", target: "Samsung", type: "suit"},
-  {source: "Kodak", target: "RIM", type: "suit"},
-  {source: "Nokia", target: "Qualcomm", type: "suit"}
+  {source: "Apple", target: "Samsung", type: "relation"},
+  {source: "Kodak", target: "RIM", type: "relation"},
+  {source: "Nokia", target: "Qualcomm", type: "relation"}
 ];
 
 var nodes = {};
@@ -57,7 +56,7 @@ var svg = d3.select("body").append("svg")
 
 // Per-type markers, as they don't inherit styles.
 svg.append("defs").selectAll("marker")
-    .data(["suit", "licensing", "resolved"])
+    .data(["relation", "contain", "resolved"])
   .enter().append("marker")
     .attr("id", function(d) { return d; })
     .attr("viewBox", "0 -5 10 10")
@@ -79,6 +78,7 @@ var circle = svg.append("g").selectAll("circle")
     .data(force.nodes())
   .enter().append("circle")
     .attr("r", 6)
+    .attr("class", "node")
     .call(force.drag);
 
 var text = svg.append("g").selectAll("text")
@@ -105,3 +105,25 @@ function linkArc(d) {
 function transform(d) {
   return "translate(" + d.x + "," + d.y + ")";
 }
+
+var selectedNode = 0;
+
+// set a click event, add an event listener to every circle, when they are selected, change the color to yellow
+$("circle").on("click", function() {
+  console.log("selected, classes: " + $(this).attr("class"));
+  $(this).toggleClass("selected");
+  // $(this).on("click", function() {
+  //   console.log("clicked, status: " + $(this).hasClass("selected") + " selected: " + selectedNode);
+  //   if ($(this).hasClass("selected")) {
+  //     console.log("Was not selected, SELECT IT!");
+  //     $(this).removeClass("selected");
+  //     selectedNode -= 1;
+  //   }
+  //   else if (selectedNode < 2) {
+  //     console.log("Was selected, CANCEL IT!");
+  //     $(this).addClass("selected");
+  //     selectedNode += 1;
+  //   }
+  // })
+});
+

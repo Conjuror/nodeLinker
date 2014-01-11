@@ -4,11 +4,11 @@
   stroke-width: 1.5px;
 }
 
-#licensing {
+#contain {
   fill: green;
 }
 
-.link.licensing {
+.link.contain {
   stroke: green;
 }
 
@@ -20,6 +20,10 @@ circle {
   fill: #ccc;
   stroke: #333;
   stroke-width: 1.5px;
+}
+
+.selected {
+  fill: yellow;
 }
 
 text {
