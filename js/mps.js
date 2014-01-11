@@ -1,14 +1,14 @@
 
 var links = [
-  {source: "Root", target: "海洋", type: "contain"},
-  {source: "Root", target: "海岸", type: "contain"},
-  {source: "海洋", target: "水", type: "contain"},
-  {source: "海洋", target: "招潮蟹", type: "contain"},
-  {source: "海洋", target: "食藻螺", type: "contain"},
-  {source: "海岸", target: "岩岸", type: "contain"},
-  {source: "海岸", target: "沙岸", type: "contain"},
-  {source: "招潮蟹", target: "沙岸", type: "relation"},
-  {source: "食藻螺", target: "岩岸", type: "relation"},
+  {source: "Root", target: "海洋", type: "contain", id: 1},
+  {source: "Root", target: "海岸", type: "contain", id: 2},
+  {source: "海洋", target: "水", type: "contain", id: 3},
+  {source: "海洋", target: "招潮蟹", type: "contain", id:  4},
+  {source: "海洋", target: "食藻螺", type: "contain", id: 5},
+  {source: "海岸", target: "岩岸", type: "contain", id: 6},
+  {source: "海岸", target: "沙岸", type: "contain", id: 7},
+  {source: "招潮蟹", target: "沙岸", type: "relation", id: 8},
+  {source: "食藻螺", target: "岩岸", type: "relation", id: 9},
   {source: "Oracle", target: "Google", type: "relation"},
   {source: "Apple", target: "HTC", type: "relation"},
   {source: "Microsoft", target: "Inventec", type: "relation"},
@@ -28,6 +28,55 @@ var links = [
   {source: "Apple", target: "Samsung", type: "relation"},
   {source: "Kodak", target: "RIM", type: "relation"},
   {source: "Nokia", target: "Qualcomm", type: "relation"}
+];
+
+var routes = [
+  {"nodes": ["海洋", "海岸"], "path": [
+    {"route": [4, 7, 8], "node": ["招潮蟹", "沙岸"]},
+    {"route": [2, 5, 9], "node": ["岩岸", "食藻螺"]}]},
+  {"nodes": ["海洋", "沙岸"], "path": [
+    {"route": [4, 8], "node": ["招潮蟹"]}]},
+  {"nodes": ["海洋", "岩岸"], "path": [
+    {"route": [5, 9], "node": ["食藻螺"]}]},
+  {"nodes": ["海洋", "食藻螺"], "path": [
+    {"route": [5], "node": []}]},
+  {"nodes": ["海洋", "招潮蟹"], "path": [
+    {"route": [4], "node": []}]},
+  {"nodes": ["海洋", "水"], "path": [
+    {"route": [3], "node": []}]},
+  {"nodes": ["海岸", "沙岸"], "path": [
+    {"route": [7], "node": []}]},
+  {"nodes": ["海岸", "岩岸"], "path": [
+    {"route": [6], "node": []}]},
+  {"nodes": ["海岸", "食藻螺"], "path": [
+    {"route": [6, 9], "node": ["岩岸"]}]},
+  {"nodes": ["海岸", "招潮蟹"], "path": [
+    {"route": [7, 8], "node": ["沙岸"]}]},
+  {"nodes": ["水", "招潮蟹"], "path": [
+    {"route": [3, 4], "node": ["海洋"]}]},
+  {"nodes": ["水", "食藻螺"], "path": [
+    {"route": [3, 5], "node": ["海洋"]}]},
+  {"nodes": ["水", "岩岸"], "path": [
+    {"route": [3, 5, 9], "node": ["海洋", "食藻螺"]}]},
+  {"nodes": ["水", "沙岸"], "path": [
+    {"route": [3, 4, 8], "node": ["海洋", "招潮蟹"]}]},
+  {"nodes": ["水", "海岸"], "path": [
+    {"route": [3, 5, 9, 6], "node": ["海洋", "食藻螺", "岩岸"]},
+    {"route": [3, 4, 8, 7], "node": ["海洋", "招潮蟹", "沙岸"]}]},
+  {"nodes": ["招潮蟹", "食藻螺"], "path": [
+    {"route": [4, 5], "node": ["海洋"]}]},
+  {"nodes": ["招潮蟹", "岩岸"], "path": [
+    {"route": [4, 5, 9], "node": ["海洋", "食藻螺"]},
+    {"route": [8, 7, 6], "node": ["沙岸", "海岸"]}]},
+  {"nodes": ["招潮蟹", "沙岸"], "path": [
+    {"route": [8], "node": []}]},
+  {"nodes": ["食藻螺", "岩岸"], "path": [
+    {"route": [9], "node": []}]},
+  {"nodes": ["食藻螺", "沙岸"], "path": [
+    {"route": [4, 5, 8], "node": ["海洋", "招潮蟹"]},
+    {"route": [9, 7, 6], "node": ["岩岸", "海岸"]}]},
+  {"nodes": ["岩岸", "沙岸"], "path": [
+    {"route": [7, 6], "node": ["海岸"]}]}
 ];
 
 var nodes = {};
@@ -72,13 +121,16 @@ var path = svg.append("g").selectAll("path")
     .data(force.links())
   .enter().append("path")
     .attr("class", function(d) { return "link " + d.type; })
-    .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
+    .attr("marker-end", function(d) { return "url(#" + d.type + ")"; })
+    .attr("id", function(d) {return d.id || -1});
 
 var circle = svg.append("g").selectAll("circle")
     .data(force.nodes())
   .enter().append("circle")
     .attr("r", 6)
     .attr("class", "node")
+    .attr("id", function(d) { return d.name; })
+    .attr("title", function(d) { return d.name; })
     .call(force.drag);
 
 var text = svg.append("g").selectAll("text")
@@ -106,24 +158,50 @@ function transform(d) {
   return "translate(" + d.x + "," + d.y + ")";
 }
 
-var selectedNode = 0;
+// start from here
+
+var selectedNode = [];
+
+function getRoutes(a, b) {
+  for (var i in routes) {
+    if (routes[i].nodes.indexOf(a) != -1 && routes[i].nodes.indexOf(b) != -1) {
+      break;
+    }
+  }
+  return routes[i];
+}
 
 // set a click event, add an event listener to every circle, when they are selected, change the color to yellow
+// You can not use addClass for svg
 $("circle").on("click", function() {
-  console.log("selected, classes: " + $(this).attr("class"));
-  $(this).toggleClass("selected");
-  // $(this).on("click", function() {
-  //   console.log("clicked, status: " + $(this).hasClass("selected") + " selected: " + selectedNode);
-  //   if ($(this).hasClass("selected")) {
-  //     console.log("Was not selected, SELECT IT!");
-  //     $(this).removeClass("selected");
-  //     selectedNode -= 1;
-  //   }
-  //   else if (selectedNode < 2) {
-  //     console.log("Was selected, CANCEL IT!");
-  //     $(this).addClass("selected");
-  //     selectedNode += 1;
-  //   }
-  // })
+  if ($(this).attr("class").indexOf("selected") != -1 && selectedNode.length == 2) {
+    $(".route").each(function() {
+      $(this).attr("class", $(this).attr("class").replace(" route", ""));
+    });
+    $(this).attr("class", "node");
+    selectedNode.splice(selectedNode.indexOf($(this).attr("id")), 1);
+  }
+  else if ($(this).attr("class").indexOf("selected") != -1) {
+    // selected
+    $(this).attr("class", "node");
+    selectedNode.splice(selectedNode.indexOf($(this).attr("id")), 1);
+  }
+  else if (selectedNode.length == 0) {
+    $(this).attr("class", "node selected");
+    selectedNode.push($(this).attr("id"));
+  }
+  else if (selectedNode.length == 1) {
+    $(this).attr("class", "node selected");
+    selectedNode.push($(this).attr("id"));
+    // add routes
+    route = getRoutes(selectedNode[0], selectedNode[1]);
+    route.path[0].node.forEach(function(index, pos) {
+      originClass = $("circle[id='"+index+"']").attr("class");
+      $("circle[id='"+index+"']").attr("class", originClass + " route");
+    });
+    route.path[0].route.forEach(function(index, pos) {
+      originClass = $("path[id='"+index+"']").attr("class");
+      $("path[id='"+index+"']").attr("class", originClass + " route");
+    });
+  }
 });
-

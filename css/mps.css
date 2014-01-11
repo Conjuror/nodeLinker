@@ -9,6 +9,7 @@
 }
 
 .link.contain {
+  fill: none;
   stroke: green;
 }
 
@@ -24,6 +25,13 @@ circle {
 
 .selected {
   fill: yellow;
+}
+
+.link.route {
+  stroke: red;
+}
+.node.route {
+  fill: red;
 }
 
 text {
