@@ -81,14 +81,29 @@ function transform(d) {
 
 var selectedNode = [];
 var src = "", des = "";
+var selectedRoutes;
 
 function getRoutes(a, b) {
+  console.log("getRoutes");
   for (var i in routes) {
     if (routes[i].nodes.indexOf(a) != -1 && routes[i].nodes.indexOf(b) != -1) {
-      break;
+      routes[i].path[0].node.forEach(function(index, pos) {
+        originClass = $("circle[id='"+index+"']").attr("class");
+        $("circle[id='"+index+"']").attr("class", originClass + " route");
+      });
+      routes[i].path[0].route.forEach(function(index, pos) {
+        originClass = $("path[id='"+index+"']").attr("class");
+        $("path[id='"+index+"']").attr("class", originClass + " route");
+      });
+
+      for (var j = 0 ; j < routes[i].path.length ; j++) {
+        drawAccordion(j, selectedNode[0], selectedNode[1], routes[i].path[j].node, routes[i].path[j].route);
+      }
+
+      $("#accordion").accordion("refresh");
+      return routes[i];
     }
   }
-  return routes[i];
 }
 
 function drawAccordion(index, source, target, nodes, routes) {
@@ -129,21 +144,7 @@ $("circle").on("click", function() {
     selectedNode.push($(this).attr("id"));
     (src == "") ? src = nodeId : des = nodeId;
     // add routes
-    route = getRoutes(selectedNode[0], selectedNode[1]);
-    route.path[0].node.forEach(function(index, pos) {
-      originClass = $("circle[id='"+index+"']").attr("class");
-      $("circle[id='"+index+"']").attr("class", originClass + " route");
-    });
-    route.path[0].route.forEach(function(index, pos) {
-      originClass = $("path[id='"+index+"']").attr("class");
-      $("path[id='"+index+"']").attr("class", originClass + " route");
-    });
-
-    for (var i = 0 ; i < route.path.length ; i++) {
-      drawAccordion(i, selectedNode[0], selectedNode[1], route.path[i].node, route.path[i].route);
-    }
-
-    $("#accordion").accordion("refresh");
+    selectedRoutes = getRoutes(src, des);
   }
   console.log(src + "/" + des);
   $("#source").val(src);

@@ -15,6 +15,8 @@
 
 .link.resolved {
   stroke-dasharray: 0,2 1;
+  stroke: gray;
+  stroke-width: 1.5px;
 }
 
 circle {
