@@ -65,17 +65,19 @@ def routeGenerator():
 
     for start in nodes[1:]:
         initMap()
-        for l in links[1:]:
+        for l in links:
             if nodes[l['source']]['nodeId'] == start['nodeId']:
                 nodes[l['target']]['path'].append([l['lid']])
-        for r in range(1, routeLimit+1):
+            elif nodes[l['target']]['nodeId'] == start['nodeId']:
+                nodes[l['source']]['path'].append([l['lid']])
+        for r in range(2, routeLimit+1):
             for l in links:
-                if len(nodes[l['source']]['path']) != 0 and len(nodes[l['source']]['path'][0]) == r:
-                    if len(nodes[l['target']]['path']) == 0 or len(nodes[l['target']]['path'][0]) == r+1:
+                if len(nodes[l['source']]['path']) != 0 and len(nodes[l['source']]['path'][0]) == r-1 and nodes[l['target']]['nodeId'] != start['nodeId']:
+                    if len(nodes[l['target']]['path']) == 0 or len(nodes[l['target']]['path'][0]) == r:
                         for i in nodes[l['source']]['path']:
                             nodes[l['target']]['path'].append(i+[l['lid']])
-                if len(nodes[l['target']]['path']) != 0 and len(nodes[l['target']]['path'][0]) == r:
-                    if len(nodes[l['source']]['path']) == 0 or len(nodes[l['source']]['path'][0]) == r+1:
+                if len(nodes[l['target']]['path']) != 0 and len(nodes[l['target']]['path'][0]) == r-1 and nodes[l['source']]['nodeId'] != start['nodeId']:
+                    if len(nodes[l['source']]['path']) == 0 or len(nodes[l['source']]['path'][0]) == r:
                         for i in nodes[l['target']]['path']:
                             nodes[l['source']]['path'].append(i+[l['lid']])
         for t in nodes[1:]:
