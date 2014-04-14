@@ -1,11 +1,5 @@
 <head>
   <meta charset="UTF-8"/>
-  <!--[if IE]>
-      <link href="/css/ie.css" media="screen, projection" rel="stylesheet" type="text/css" />
-  <![endif]-->
-
-  <!-- D3 library -->
-  <script src="trinity/d3.v3/d3.v3.min.js" charset="utf-8"></script>
 
   <!-- jQuery UI v1.10.3 -->
   <!--
@@ -17,22 +11,34 @@
   <script type="text/javascript" src="trinity/jquery-ui-1.10.3/jquery-1.9.1.js"></script>
   <script type="text/javascript" src="trinity/jquery-ui-1.10.3/ui/jquery-ui.js"></script>
 
+  <link rel="stylesheet" href="css/jquery.dynatable.css" />
+  <script type="text/javascript" src="js/jquery.dynatable.js"></script>
+  <script type="text/javascript" src="js/database.js"></script>
   <script type="text/javascript" src="js/data.js"></script>
-  <script type="text/javascript" src="js/data_handler.js"></script>
 
-  <link href="css/jquery.dynatable.css" media="screen,projection" rel="stylesheet" type="text/css" />
 
   <!-- d3 mps demo -->
   <link href="css/mps.css" rel="stylesheet" type="text/css" />
+  <title>ADMIN</title>
 </head>
 <body>
-  <script type="text/javascript" src="js/mps.js"></script>
-  <div id="info">
-    <table>
-      <tr><td>Source:</td><td><input type="text" id="sourceText" class="txtfield"/></td></tr>
-      <tr><td>Target:</td><td><input type="text" id="targetText" class="txtfield"/></td></tr>
-    </table>
-    <div id="accordion">
-    </div>
-  </div>
+  <table id="my-table">
+    <thead>
+      <th width=5%>id</th>
+      <th width=20%>source</th>
+      <th width=20%>target</th>
+      <th width=15%>type</th>
+      <th width=20%>relationship</th>
+      <th width=20%>revrel</th>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    $('#my-table').dynatable({
+      dataset: {
+        records: links
+      }
+    });
+  </script>
 </body>
