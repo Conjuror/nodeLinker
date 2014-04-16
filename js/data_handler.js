@@ -4,10 +4,6 @@ function updateRoute() {
 
 var route = {};
 
-function getRoute(source, destination) {
-
-}
-
 function highLight() {
   if (availableNodes.indexOf($(this).val()) != -1 && $("#"+$(this).val()).attr("class") != "node selected") {
     // console.log($(this).val()+" clicked");
@@ -23,18 +19,17 @@ function highLight() {
 }
 
 var availableNodes = [];
+for (i = 0 ; i < links.length ; i++) {
+  if (availableNodes.indexOf(links[i]['source']) == -1) {
+    availableNodes.push(links[i]['source']);
+  }
+  if (availableNodes.indexOf(links[i]['target']) == -1) {
+    availableNodes.push(links[i]['target']);
+  }
+}
 
 // autocomplete
 $(function(){
-  for (i = 0 ; i < links.length ; i++) {
-    if (availableNodes.indexOf(links[i]['source']['name']) == -1) {
-      availableNodes.push(links[i]['source']['name']);
-    }
-    if (availableNodes.indexOf(links[i]['target']['name']) == -1) {
-      availableNodes.push(links[i]['target']['name']);
-    }
-  }
-
   $("#sourceText").autocomplete({
     source: availableNodes
   }).bind("input.autocomplete", function () {
@@ -55,26 +50,18 @@ $(function(){
   var selectedRoutes;
 
   function getRoutes(a, b) {
-    console.log("getRoutes");
-    for (var i in routes) {
-      if (routes[i].nodes.indexOf(a) != -1 && routes[i].nodes.indexOf(b) != -1) {
-        routes[i].path[0].node.forEach(function(index, pos) {
-          originClass = $("circle[id='"+index+"']").attr("class");
-          $("circle[id='"+index+"']").attr("class", originClass + " route");
-        });
-        routes[i].path[0].route.forEach(function(index, pos) {
-          originClass = $("path[id='"+index+"']").attr("class");
-          $("path[id='"+index+"']").attr("class", originClass + " route");
-        });
-
-        for (var j = 0 ; j < routes[i].path.length ; j++) {
-          drawAccordion(j, selectedNode[0], selectedNode[1], routes[i].path[j].node, routes[i].path[j].route);
-        }
-
-        $("#accordion").accordion("refresh");
-        return routes[i];
-      }
+    console.log(availableNodes.length);
+    src = availableNodes.indexOf(a);
+    des = availableNodes.indexOf(b);
+    console.log(a+"->"+b);
+    now = src;
+    nodes="";
+    while (map[now][des][0]['next'] != null) {
+      nodes = nodes + " "+availableNodes[now];
+      console.log(availableNodes[now] + "->" + availableNodes[des] + " disToGo:" + map[now][des][0]['distance'] + " next:" + availableNodes[map[now][des][0]['next']]);
+      now = map[now][des][0]['next'];
     }
+    drawAccordion(1, a, b, nodes)
   }
 
   function drawAccordion(index, source, target, nodes, routes) {
@@ -132,9 +119,68 @@ $(function(){
       }
 
       // add routes
+      getRoutes($("#sourceText").val(), $("#targetText").val());
       console.log("calculate route: " +$("#sourceText").val() + " -> " + $("#targetText").val() );
     }
   });
 
 });
 
+// main algorithm for generating routes
+function generateRoute() {
+  // init
+  map = [];
+  for (i = 0 ; i < availableNodes.length ; i++) {
+    map[i] = [];
+    for (j = 0 ; j < availableNodes.length ; j++) {
+      map[i][j] = []
+      if (i == j)
+        map[i][j].push({"next": null, "distance": 0});
+      else
+        map[i][j].push({"distance": -1});
+    }
+  }
+
+  // known distance = 1
+
+  for (i = 0 ; i < links.length ; i++) {
+    src = availableNodes.indexOf(links[i]['source']);
+    des = availableNodes.indexOf(links[i]['target']);
+    map[src][des][0] = {"next": des, "distance": 1};
+    map[des][src][0] = {"next": des, "distance": 1};
+  }
+
+  console.log("start calculating...");
+  change = true;
+  while (change) {
+    change = false;
+    for (i = 0 ; i < availableNodes.length ; i++) {
+      for (j = 0 ; j < availableNodes.length ; j++) {
+        if (j == i)
+          continue;
+        for (k = 0 ; k < availableNodes.length ; k++) {
+          if (i == k || j == k)
+            continue;
+          if (map[i][j][0]['distance'] == -1 && map[i][k][0]['distance'] == 1 && map[k][j][0]['distance'] > 0) {
+            map[i][j][0] = {"next": k, "distance": map[i][k][0]['distance']+map[k][j][0]['distance']};
+            change = true;
+          }
+          else if (map[i][j][0]['distance'] > 0 && map[i][k][0]['distance'] == 1 && map[k][j][0]['distance'] > 0 && map[i][k][0]['distance']+map[k][j][0]['distance'] <= map[i][j][0]['distance']) {
+            exist = false;
+            for (c = 0 ; c < map[i][j].length ; c++) {
+              if (map[i][j][c]['next'] == k)
+                exist = true
+            }
+            if (!exist) {
+              map[i][j].push({"next": k, "distance":map[i][k][0]['distance']+map[k][j][0]['distance']})
+              change = true;
+            }
+          }
+        }
+      }
+    }
+  }
+  console.log("done");
+}
+
+generateRoute();
