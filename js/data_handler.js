@@ -1,7 +1,3 @@
-function updateRoute() {
-  console.log(links);
-}
-
 var route = {};
 
 function highLight() {
@@ -49,24 +45,74 @@ $(function(){
   var src = "", des = "";
   var selectedRoutes;
 
-  function getRoutes(a, b) {
-    console.log(availableNodes.length);
-    src = availableNodes.indexOf(a);
-    des = availableNodes.indexOf(b);
-    console.log(a+"->"+b);
-    now = src;
-    nodes="";
-    while (map[now][des][0]['next'] != null) {
-      nodes = nodes + " "+availableNodes[now];
-      console.log(availableNodes[now] + "->" + availableNodes[des] + " disToGo:" + map[now][des][0]['distance'] + " next:" + availableNodes[map[now][des][0]['next']]);
-      now = map[now][des][0]['next'];
+  function getLinksRelationship(a, b) {
+    var result = "";
+    for (var lnk = 0 ; lnk < links.length ; lnk++) {
+      if (links[lnk]['source']['name'] == a && links[lnk]['target']['name'] == b) {
+        result = links[lnk].relationship;
+        break;
+      }
+      else if (links[lnk]['source']['name'] == b && links[lnk]['target']['name'] == a) {
+        result = links[lnk].revrel;
+        break;
+      }
     }
-    drawAccordion(1, a, b, nodes)
+    return result;
   }
 
-  function drawAccordion(index, source, target, nodes, routes) {
+  function getLinksOrder(src, des) {
+    var result = -1;
+    a = availableNodes[src];
+    b = availableNodes[des];
+    for (lnk = 0 ; lnk < links.length ; lnk++) {
+      if ((links[lnk]['source']['name'] == a && links[lnk]['target']['name'] == b) || 
+          (links[lnk]['source']['name'] == b && links[lnk]['target']['name'] == a)) {
+        result = links[lnk]['id'];
+        break;
+      }
+    }
+    console.log('Get Link Order->' + src + ' ' + des + ' ' + result);
+    return result;
+  }
+
+  function getPaths(a, b) {
+    src = availableNodes.indexOf(a);
+    des = availableNodes.indexOf(b);
+    
+    console.log(src + ' > ' + des);
+
+    // TODO: replace the logic for multiple paths
+    description = "<div>";
+    now = src;
+    selectedRoutes = [];
+    for (i = 0 ; i < map[src][des][0]['distance'] ; i++) {
+      nxt = map[now][des][0]['next'];
+      nowNode = availableNodes[now];
+      nxtNode = availableNodes[nxt];
+      selectedRoutes.push(getLinksOrder(now, nxt));
+      selectedRoutes.push(nxtNode);
+      rel = getLinksRelationship(nowNode, nxtNode);
+      description += nowNode + "(" + rel + ")" + nxtNode + "<br>";
+      now = nxt;
+    }
+    selectedRoutes.pop();
+    description += "</div>";
+    drawAccordion(0, description);
+    highlightSelectedRoutes();
+  }
+
+  function highlightSelectedRoutes() {
+    for (i = 0 ; i < selectedRoutes.length ; i++) {
+      originType = $("#"+selectedRoutes[i]).attr("class");
+      $("#"+selectedRoutes[i]).attr("class", originType+" route");
+    }
+  }
+
+  function drawAccordion(index, description) {
+    // TODO: need to change for multiple paths
     $("#accordion").append("<h3> Path " + index + "</h3>");
-    $("#accordion").append("<div>" + "Source: " + source + "<br>" + "target: " + target + "<br>" + "nodes: " + nodes + "<br>" + "paths: " + routes + "<br>" + "</div>");
+    $("#accordion").append(description);
+    $("#accordion").accordion("refresh");
   }
 
   $(function() {$("#accordion").accordion();});
@@ -119,7 +165,7 @@ $(function(){
       }
 
       // add routes
-      getRoutes($("#sourceText").val(), $("#targetText").val());
+      getPaths($("#sourceText").val(), $("#targetText").val());
       console.log("calculate route: " +$("#sourceText").val() + " -> " + $("#targetText").val() );
     }
   });
@@ -147,7 +193,7 @@ function generateRoute() {
     src = availableNodes.indexOf(links[i]['source']);
     des = availableNodes.indexOf(links[i]['target']);
     map[src][des][0] = {"next": des, "distance": 1};
-    map[des][src][0] = {"next": des, "distance": 1};
+    map[des][src][0] = {"next": src, "distance": 1};
   }
 
   console.log("start calculating...");

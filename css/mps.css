@@ -29,7 +29,10 @@ circle {
   fill: yellow;
 }
 
-.link.route {
+.link.contain.route {
+  stroke: red;
+}
+.link.resolved.route {
   stroke: red;
 }
 .node.route {
