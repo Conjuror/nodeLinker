@@ -71,7 +71,7 @@ $(function(){
         break;
       }
     }
-    console.log('Get Link Order->' + src + ' ' + des + ' ' + result);
+    // console.log('Get Link Order->' + src + ' ' + des + ' ' + result);
     return result;
   }
 
@@ -79,40 +79,91 @@ $(function(){
     src = availableNodes.indexOf(a);
     des = availableNodes.indexOf(b);
     
-    console.log(src + ' > ' + des);
+    // console.log(src + ' > ' + des);
 
     // TODO: replace the logic for multiple paths
-    description = "<div>";
-    now = src;
+    description = [];
     selectedRoutes = [];
-    for (i = 0 ; i < map[src][des][0]['distance'] ; i++) {
-      nxt = map[now][des][0]['next'];
-      nowNode = availableNodes[now];
-      nxtNode = availableNodes[nxt];
-      selectedRoutes.push(getLinksOrder(now, nxt));
-      selectedRoutes.push(nxtNode);
-      rel = getLinksRelationship(nowNode, nxtNode);
-      description += nowNode + "(" + rel + ")" + nxtNode + "<br>";
-      now = nxt;
+    selectedRoutes.push([]);
+    for (c = 0 ; c < selectedRoutes.length ; c++) {
+      if (c == 0) {
+        // new path
+        description[0] = "<div>";
+        now = src;
+      }
+      else {
+        now = availableNodes.indexOf(selectedRoutes[c][selectedRoutes[c].length-1]);
+      }
+      while (map[now][des][0]['distance'] > 0) {
+        for (l = map[now][des].length-1 ; l >= 0 ; l--) {
+          if (l == 0) {
+            k = c;
+          }
+          else {
+            k = selectedRoutes.length;
+            currentRoute = selectedRoutes[c].slice(0);
+            currentDescription = description[c].slice(0);
+            selectedRoutes.push(currentRoute);
+            description.push(currentDescription);
+          }
+          nxt = map[now][des][l]['next'];
+          nowNode = availableNodes[now];
+          nxtNode = availableNodes[nxt];
+          selectedRoutes[k].push(getLinksOrder(now, nxt));
+          selectedRoutes[k].push(nxtNode);
+          rel = getLinksRelationship(nowNode, nxtNode);
+          description[k] += nowNode + "(" + rel + ")" + nxtNode + "<br>";
+          if (l == 0) {
+            now = nxt;
+          }
+        }
+      }
+      selectedRoutes[c].pop();
+      description[c] += "</div>";
     }
-    selectedRoutes.pop();
-    description += "</div>";
-    drawAccordion(0, description);
-    highlightSelectedRoutes();
+
+    // description = "<div>";
+    // now = src;
+    // selectedRoutes = [];
+    // selectedRoutes.push([]);
+    // for (i = 0 ; i < map[src][des][0]['distance'] ; i++) {
+    //   nxt = map[now][des][0]['next'];
+    //   nowNode = availableNodes[now];
+    //   nxtNode = availableNodes[nxt];
+    //   selectedRoutes[0].push(getLinksOrder(now, nxt));
+    //   selectedRoutes[0].push(nxtNode);
+    //   rel = getLinksRelationship(nowNode, nxtNode);
+    //   description += nowNode + "(" + rel + ")" + nxtNode + "<br>";
+    //   now = nxt;
+    // }
+    // selectedRoutes[0].pop();
+    // description += "</div>";
+    drawAccordion(description);
+    highlightSelectedRoutes(0);
+    console.log(selectedRoutes);
   }
 
-  function highlightSelectedRoutes() {
-    for (i = 0 ; i < selectedRoutes.length ; i++) {
-      originType = $("#"+selectedRoutes[i]).attr("class");
-      $("#"+selectedRoutes[i]).attr("class", originType+" route");
+  function highlightSelectedRoutes(index) {
+    $(".route").each(function() {
+      originClass = $(this).attr("class");
+      $(this).attr("class", originClass.replace(" route", ""));
+    });
+    for (i = 0 ; i < selectedRoutes[index].length ; i++) {
+      originType = $("#"+selectedRoutes[index][i]).attr("class");
+      $("#"+selectedRoutes[index][i]).attr("class", originType+" route");
     }
   }
 
-  function drawAccordion(index, description) {
-    // TODO: need to change for multiple paths
-    $("#accordion").append("<h3> Path " + index + "</h3>");
-    $("#accordion").append(description);
+  function drawAccordion(description) {
+    for (i = 0 ; i < description.length ; i++) {
+      $("#accordion").append("<h3> Path " + i + "</h3>");
+      $("#accordion").append(description[i]);      
+    }
     $("#accordion").accordion("refresh");
+    $("#accordion").accordion("refresh");
+    $(".ui-accordion-header").on("click", function() {
+      highlightSelectedRoutes($(this)[0].id.split('-').pop());
+    });
   }
 
   $(function() {$("#accordion").accordion();});
