@@ -9,12 +9,16 @@ links.forEach(function(link) {
 var width = 1260,
     height = 800;
 
+nodes["海洋"].x = width / 2;
+nodes["海洋"].y = height / 2;
+nodes["海洋"].fixed = true;
+
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
     .size([width, height])
     .linkDistance(60)
-    .charge(-300)
+    .charge(-400)
     .on("tick", tick)
     .start();
 
