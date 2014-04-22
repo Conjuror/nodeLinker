@@ -202,22 +202,27 @@ $(function(){
       // select first node
       $(this).attr("class", "node selected");
       selectedNode.push(nodeId);
-      $("#sourceText").val(nodeId);
+      if ($("#targetText").val() != nodeId) {
+        $("#sourceText").val(nodeId);
+      }
+      else if ($("#sourceText").val() != nodeId) {
+        $("#targetText").val(nodeId);
+      }
     }
     else if (selectedNode.length == 1) {
       // select second node
       $(this).attr("class", "node selected");
       selectedNode.push($(this).attr("id"));
-      if (availableNodes.indexOf($("#sourceText").val()) == -1) {
-        $("#sourceText").val(nodeId);
-      }
-      else {
+      if ($("#sourceText").val() != nodeId && availableNodes.indexOf($("#sourceText").val()) != -1) {
         $("#targetText").val(nodeId);
+      }
+      else if ($("#targetText").val() != nodeId && availableNodes.indexOf($("#targetText").val()) != -1) {
+        $("#sourceText").val(nodeId);
       }
 
       // add routes
-      getPaths($("#sourceText").val(), $("#targetText").val());
       console.log("calculate route: " +$("#sourceText").val() + " -> " + $("#targetText").val() );
+      getPaths($("#sourceText").val(), $("#targetText").val());
     }
   });
 
