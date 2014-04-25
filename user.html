@@ -1,0 +1,53 @@
+<head>
+  <meta charset="UTF-8"/>
+
+  <!-- jQuery UI v1.10.3 -->
+  <!--
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+  <script type="text/javascript" src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  -->
+  <link rel="stylesheet" href="trinity/jquery-ui-1.10.3/themes/base/jquery-ui.css" />
+  <script type="text/javascript" src="trinity/jquery-ui-1.10.3/jquery-1.9.1.js"></script>
+  <script type="text/javascript" src="trinity/jquery-ui-1.10.3/ui/jquery-ui.js"></script>
+
+  <link rel="stylesheet" href="css/jquery.dynatable.css" />
+  <script type="text/javascript" src="js/jquery.dynatable.js"></script>
+  <script type="text/javascript" src="js/user.js"></script>
+  <script type="text/javascript" src="js/user_handler.js"></script>
+
+
+  <!-- d3 mps demo -->
+  <title>使用者管理</title>
+</head>
+<body>
+  <table id="my-table">
+    <thead>
+      <th width=30%>name</th>
+      <th width=20%>counter</th>
+      <th width=50%>time</th>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    $('#my-table').dynatable({
+      dataset: {
+        records: users
+      }
+    });
+  </script>
+
+  <br>
+  <div class="controller">
+    新增使用者：<input type="text" id="addNewUser" placeholder="使用者帳號">
+    <input type="button" id="add" value="新增使用者"><br>
+    編輯使用者：<input type="text" id="editUser" placeholder="使用者帳號">
+    <input type="text" id="counter" placeholder="次數">
+    <input type="text" id="time" placeholder="時間(分)">
+    <input type="button" id="update" value="編輯使用者"><br>
+    刪除使用者：<input type="text" id="delUser" placeholder="使用者帳號">
+    <input type="button" id="del" value="刪除使用者"><br>
+  </div>
+  <input type="button" id="logout" value="登出"><br>
+</body>

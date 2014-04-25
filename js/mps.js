@@ -1,4 +1,4 @@
-var nodes = {};
+//var nodes = {};
 
 // Compute the distinct nodes from the links.
 links.forEach(function(link) {
@@ -24,7 +24,7 @@ var force = d3.layout.force()
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
 
 // Per-type markers, as they don't inherit styles.
 svg.append("defs").selectAll("marker")
@@ -79,4 +79,8 @@ function linkArc(d) {
 
 function transform(d) {
   return "translate(" + d.x + "," + d.y + ")";
+}
+
+function zoom() {
+  svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 }

@@ -1,5 +1,11 @@
 <head>
   <meta charset="UTF-8"/>
+  <!--[if IE]>
+      <link href="/css/ie.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <![endif]-->
+
+  <!-- D3 library -->
+  <script src="trinity/d3.v3/d3.v3.min.js" charset="utf-8"></script>
 
   <!-- jQuery UI v1.10.3 -->
   <!--
@@ -11,34 +17,36 @@
   <script type="text/javascript" src="trinity/jquery-ui-1.10.3/jquery-1.9.1.js"></script>
   <script type="text/javascript" src="trinity/jquery-ui-1.10.3/ui/jquery-ui.js"></script>
 
-  <link rel="stylesheet" href="css/jquery.dynatable.css" />
-  <script type="text/javascript" src="js/jquery.dynatable.js"></script>
-  <script type="text/javascript" src="js/database.js"></script>
   <script type="text/javascript" src="js/data.js"></script>
-
-
+  <script type="text/javascript" src="js/data_handler.js"></script>
+  <script type="text/javascript" src="js/init_data.js"></script>
+  <script type="text/javascript" src="js/admin.js"></script>
   <!-- d3 mps demo -->
   <link href="css/mps.css" rel="stylesheet" type="text/css" />
-  <title>ADMIN</title>
 </head>
 <body>
-  <table id="my-table">
-    <thead>
-      <th width=5%>id</th>
-      <th width=20%>source</th>
-      <th width=20%>target</th>
-      <th width=15%>type</th>
-      <th width=20%>relationship</th>
-      <th width=20%>revrel</th>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <script>
-    $('#my-table').dynatable({
-      dataset: {
-        records: links
-      }
-    });
-  </script>
+  <div id="info">
+    <table>
+      <tr><td>Source:</td><td><input type="text" id="sourceText" class="txtfield"/></td></tr>
+      <tr><td>Target:</td><td><input type="text" id="targetText" class="txtfield"/></td></tr>
+    </table>
+    <div id="accordion">
+    </div>
+    <table id="setup">
+      <tr><td colspan="2"><input type="radio" name="action" value="new">新增節點關係</td></tr>
+      <tr><td colspan="2"><input type="radio" name="action" value="update">更新節點關係</td></tr>
+      <tr><td colspan="2"><input type="radio" name="action" value="remove">移除節點關係</td></tr>
+      <tr><td>起點:</td><td><input type="text" id="sourceSetup" class="txtfield"/></td></tr>
+      <tr><td>目標:</td><td><input type="text" id="targetSetup" class="txtfield"/></td></tr>
+      <tr><td colspan="2"><input type="radio" name="type" value="contain">直接關係</td></tr>
+      <tr><td colspan="2"><input type="radio" name="type" value="resolved">間接關係</td></tr>
+      <tr><td>順向關係:</td><td><input type="text" id="relationSetup" class="txtfield"/></td></tr>
+      <tr><td>反向關係:</td><td><input type="text" id="revrelSetup" class="txtfield"/></td></tr>
+      <tr><td colspan="2"><input type="button" id="exec" value="執行"/></td></tr>
+    </table>
+    <input type="button" id="saveGraph" value="固定畫面"/>
+    <input type="button" id="editUser" value="編輯使用者畫面"/>
+    <input type="button" id="logout" value="登出"/>
+  </div>
+  <script type="text/javascript" src="js/mps.js"></script>
 </body>

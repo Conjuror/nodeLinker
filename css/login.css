@@ -1,0 +1,38 @@
+body {
+  background-color: #EEE;
+}
+
+.slogan {
+  position: absolute;
+  width: 550px;
+  height: 70px;
+  left: 50%;
+  top: 10%;
+  margin-left: -275px;
+  font-size: 40px;
+  font-family: "Microsoft JhengHei" sans-serif;
+  text-align: center;
+}
+
+.login {
+  position: absolute;
+  width: 250px;
+  height: 150px;
+  left: 50%;
+  top: 30%;
+  margin-top: -75px;
+  margin-left: -125px;
+
+  border: 3px solid #444;
+  box-shadow: 1px 5px 5px #666
+
+
+  font-size: 10px;
+  font-family: "Microsoft YaHei" sans-serif;
+  text-align: center;
+}
+
+.image {
+  max-height: 518;
+  max-width: 345;
+}

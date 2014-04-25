@@ -76,6 +76,8 @@ $(function(){
   }
 
   function getPaths(a, b) {
+    counter++;
+
     src = availableNodes.indexOf(a);
     des = availableNodes.indexOf(b);
     
